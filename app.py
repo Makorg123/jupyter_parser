@@ -63,7 +63,7 @@ def main():
     st.write("Upload your Jupyter Notebook (`.ipynb` file) and get separate files for each section!")
 
     # Increase file upload limit to 500MB
-    st.set_option('server.maxUploadSize', 500)
+   # st.set_option('server.maxUploadSize', 500)
 
     try:
         # Upload the notebook
