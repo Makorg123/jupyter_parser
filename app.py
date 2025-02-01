@@ -3,9 +3,9 @@ import nbformat
 import zipfile
 from io import BytesIO
 
-def parse_notebook(notebook_content, include_markdown=False):
+def parse_notebook(notebook_content, delimiter, include_markdown=False):
     """
-    Parses the Jupyter Notebook and extracts sections based on `##` comments.
+    Parses the Jupyter Notebook and extracts sections based on the specified delimiter.
     """
     try:
         notebook = nbformat.reads(notebook_content, as_version=4)
@@ -20,7 +20,7 @@ def parse_notebook(notebook_content, include_markdown=False):
         if cell.cell_type == 'code':
             lines = cell.source.split('\n')
             for line in lines:
-                if line.strip().startswith('##'):
+                if line.strip().startswith(delimiter):
                     # New section found
                     if current_section:
                         sections.append(current_section)
@@ -37,18 +37,18 @@ def parse_notebook(notebook_content, include_markdown=False):
 
     return sections
 
-def create_zip(sections, use_title_as_filename=False):
+def create_zip(sections, use_title_as_filename=False, file_format="py"):
     """
-    Creates a zip file containing all the sections as .py files.
+    Creates a zip file containing all the sections as files in the specified format.
     """
     zip_buffer = BytesIO()
     with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
         for i, section in enumerate(sections):
             if use_title_as_filename:
                 # Use the section title as the filename (after cleaning)
-                file_name = section['title'].strip('#').strip().replace(' ', '_').lower() + '.py'
+                file_name = section['title'].strip('#').strip().replace(' ', '_').lower() + f".{file_format}"
             else:
-                file_name = f"section_{i+1}.py"
+                file_name = f"section_{i+1}.{file_format}"
 
             file_content = f"# {section['title']}\n" + '\n'.join(section['content'])
             zip_file.writestr(file_name, file_content)
@@ -60,10 +60,10 @@ def main():
     Main function for the Streamlit app.
     """
     st.title("Jupyter Notebook Parser 🚀")
-    st.write("Upload your Jupyter Notebook (`.ipynb` file) and get separate `.py` files for each `##` section!")
+    st.write("Upload your Jupyter Notebook (`.ipynb` file) and get separate files for each section!")
 
     # Increase file upload limit to 500MB
-   # st.set_option('server.maxUploadSize', 500)
+    st.set_option('server.maxUploadSize', 500)
 
     try:
         # Upload the notebook
@@ -72,23 +72,40 @@ def main():
             notebook_content = uploaded_file.read()
             st.success("File uploaded successfully!")
 
-            # Toggle for Markdown inclusion
-            include_markdown = st.checkbox("Include Markdown cells in the output", value=False)
+            # Expandable settings section
+            with st.expander("Settings ⚙️"):
+                # Custom delimiter input
+                delimiter = st.text_input("Enter the delimiter for sections (e.g., `##`, `###`, `# Section`)", "##")
 
-            # Toggle for custom file names
-            use_title_as_filename = st.checkbox("Use section titles as file names", value=False)
+                # Toggle for Markdown inclusion
+                include_markdown = st.checkbox("Include Markdown cells in the output", value=False)
+
+                # Toggle for custom file names
+                use_title_as_filename = st.checkbox("Use section titles as file names", value=False)
+
+                # File format selection
+                file_format = st.selectbox("Select the output file format", ["py", "txt", "md"])
 
             # Parse the notebook
-            sections = parse_notebook(notebook_content, include_markdown)
+            with st.spinner("Parsing the notebook..."):
+                sections = parse_notebook(notebook_content, delimiter, include_markdown)
+
             if sections is None:
                 st.error("Failed to parse the notebook. Please check the file format.")
             elif not sections:
-                st.warning("No sections found in the notebook. Make sure to use `##` for section headers.")
+                st.warning("No sections found in the notebook. Make sure to use the specified delimiter for section headers.")
             else:
                 st.success(f"Found {len(sections)} sections in the notebook!")
 
+                # Preview sections
+                with st.expander("Preview Sections 👀"):
+                    for i, section in enumerate(sections):
+                        st.subheader(f"Section {i+1}: {section['title']}")
+                        st.code('\n'.join(section['content']), language='python')
+
                 # Create a zip file
-                zip_buffer = create_zip(sections, use_title_as_filename)
+                with st.spinner("Creating the zip file..."):
+                    zip_buffer = create_zip(sections, use_title_as_filename, file_format)
 
                 # Download button for the zip file
                 st.download_button(
