@@ -59,20 +59,11 @@ def main():
     """
     Main function for the Streamlit app.
     """
-    st.set_page_config(page_title="Jupyter Notebook Parser", layout="wide")
-    
-    if 'dark_mode' not in st.session_state:
-        st.session_state.dark_mode = False
+  
 
     st.title("Jupyter Notebook Parser 🚀")
     st.write("Upload your Jupyter Notebook (`.ipynb` file) and get separate files for each section!")
     
-    if st.button("Toggle Dark Mode"):
-        st.session_state.dark_mode = not st.session_state.dark_mode
-
-    if st.session_state.dark_mode:
-        st.markdown("""<style>body {background-color: #2E2E2E; color: white;}</style>""", unsafe_allow_html=True)
-
     # Increase file upload limit to 500MB
    # st.set_option('server.maxUploadSize', 500)
 
