@@ -1,5 +1,5 @@
 # 📘 Jupyter Notebook Parser
-### 🚀 A Streamlit app that extracts Python code from Jupyter Notebooks (.ipynb) and saves them as separate .py files based on ## section headers.
+### 🚀 A Streamlit app that extracts Python code from Jupyter Notebooks (.ipynb) and saves them as separate .py files based on `##` section headers.
 
 🔹 Features
 - 📂 Upload Jupyter Notebooks (.ipynb) and extract code sections.
