@@ -30,4 +30,4 @@ Python – Core logic.
 - Organize and extract code from messy notebooks.
 - Convert Notebooks to Python scripts easily.
 - Share specific sections of a Notebook as standalone scripts.
-- 🔗 Stay tuned for exciting updates! 🚀✨
+- 🔗 Stay tuned for exciting updates! 🚀
