@@ -8,6 +8,7 @@
 - 📌 Custom Filenames – Save sections using either sequential names or section titles.
 - 📦 Download as ZIP – Export all extracted sections in a compressed .zip file.
 
+
 🔹 🆕 Upcoming Enhancements
 - 🚀 `Custom Templates:` Users can define templates for output files, including headers, footers, and formatting.
 - 📂 `Batch Processing:` Upload and process multiple notebooks at once for efficiency.
