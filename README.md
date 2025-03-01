@@ -12,7 +12,7 @@
 🔹 🆕 Upcoming Enhancements
 - 🚀 `Custom Templates:` Users can define templates for output files, including headers, footers, and formatting.
 - 📂 `Batch Processing:` Upload and process multiple notebooks at once for efficiency.
-- 🌙 `Dark Mode:` Toggle dark mode for a better user experience.
+
 - ⚠️ `File Size Warning:` Receive alerts for large file uploads.
 - ✏️ `Interactive Previews:` Edit or modify extracted sections before downloading.
 
